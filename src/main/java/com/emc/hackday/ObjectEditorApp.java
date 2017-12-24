@@ -1,7 +1,12 @@
 package com.emc.hackday;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.paint.PhongMaterial;
@@ -12,7 +17,11 @@ import javafx.scene.transform.Rotate;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 public class ObjectEditorApp extends Application {
 
     private static final double CAMERA_INITIAL_DISTANCE = -450;
@@ -58,7 +67,9 @@ public class ObjectEditorApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("start()");
+        log.info("start()");
+
+        buildXYZPositionEntry();
 
         root.getChildren().add(world);
         root.setDepthTest(DepthTest.ENABLE);
@@ -79,6 +90,26 @@ public class ObjectEditorApp extends Application {
         primaryStage.show();
 
         scene.setCamera(camera);
+    }
+
+    private void buildXYZPositionEntry() {
+        Label label = new Label("XYZ:");
+        TextField xyzCoordinates = new TextField();
+        label.setLabelFor(xyzCoordinates);
+        label.setAlignment(Pos.TOP_RIGHT);
+        label.setScaleX(0.5);
+        label.setScaleY(0.5);
+
+        xyzCoordinates.setBorder(Border.EMPTY);
+        xyzCoordinates.setAlignment(Pos.TOP_RIGHT);
+        xyzCoordinates.setMaxSize(100, 5);
+        xyzCoordinates.setScaleX(0.5);
+        xyzCoordinates.setScaleY(0.5);
+        xyzCoordinates.setScaleZ(1);
+        HBox hBox = new HBox(0, label, xyzCoordinates);
+        hBox.setPadding(Insets.EMPTY);
+        hBox.setAlignment(Pos.TOP_RIGHT);
+        cameraXform3.getChildren().add(hBox);
     }
 
     private void buildCamera() {

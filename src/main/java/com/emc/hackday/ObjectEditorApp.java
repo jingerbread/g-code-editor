@@ -6,7 +6,9 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.paint.PhongMaterial;
@@ -46,6 +48,8 @@ public class ObjectEditorApp extends Application {
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
 
+    private Scene scene;
+
     double mousePosX;
     double mousePosY;
     double mouseOldX;
@@ -69,8 +73,6 @@ public class ObjectEditorApp extends Application {
     public void start(Stage primaryStage) {
         log.info("start()");
 
-        buildXYZPositionEntry();
-
         root.getChildren().add(world);
         root.setDepthTest(DepthTest.ENABLE);
 
@@ -80,36 +82,42 @@ public class ObjectEditorApp extends Application {
         //buildMolecule();
         buildObject();
 
-        Scene scene = new Scene(root, 1024, 768, true);
+        scene = new Scene(root, 500, 500, true);
         scene.setFill(Color.GREY);
         handleKeyboard(scene, world);
         handleMouse(scene, world);
 
-        primaryStage.setTitle("Molecule Sample Application");
+        primaryStage.setTitle("GCoder Application");
         primaryStage.setScene(scene);
         primaryStage.show();
 
         scene.setCamera(camera);
+        buildXYZPositionEntry();
+
     }
 
     private void buildXYZPositionEntry() {
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_RIGHT);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
         Label label = new Label("XYZ:");
         TextField xyzCoordinates = new TextField();
         label.setLabelFor(xyzCoordinates);
-        label.setAlignment(Pos.TOP_RIGHT);
-        label.setScaleX(0.5);
-        label.setScaleY(0.5);
 
         xyzCoordinates.setBorder(Border.EMPTY);
-        xyzCoordinates.setAlignment(Pos.TOP_RIGHT);
         xyzCoordinates.setMaxSize(100, 5);
-        xyzCoordinates.setScaleX(0.5);
-        xyzCoordinates.setScaleY(0.5);
-        xyzCoordinates.setScaleZ(1);
-        HBox hBox = new HBox(0, label, xyzCoordinates);
-        hBox.setPadding(Insets.EMPTY);
-        hBox.setAlignment(Pos.TOP_RIGHT);
-        cameraXform3.getChildren().add(hBox);
+
+        grid.add(label,0, 1);
+        grid.add(xyzCoordinates, 1, 2);
+
+        SubScene subScene = new SubScene(grid, 200, 200,true, SceneAntialiasing.DISABLED);
+        subScene.setCamera(new PerspectiveCamera());
+        subScene.setFill(Color.CADETBLUE);
+
+        cameraXform3.getChildren().add(subScene);
     }
 
     private void buildCamera() {

@@ -7,8 +7,12 @@ import javafx.scene.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -100,23 +104,24 @@ public class ObjectEditorApp extends Application {
     }
 
     private void buildXYZPositionEntry() {
-        Label label = new Label("XYZ:");
-        TextField xyzCoordinates = new TextField();
-        label.setLabelFor(xyzCoordinates);
-        label.setAlignment(Pos.TOP_RIGHT);
-        label.setScaleX(0.5);
-        label.setScaleY(0.5);
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_LEFT);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
 
-        xyzCoordinates.setBorder(Border.EMPTY);
-        xyzCoordinates.setAlignment(Pos.TOP_RIGHT);
-        xyzCoordinates.setMaxSize(100, 5);
-        xyzCoordinates.setScaleX(0.5);
-        xyzCoordinates.setScaleY(0.5);
-        xyzCoordinates.setScaleZ(1);
-        HBox hBox = new HBox(0, label, xyzCoordinates);
-        hBox.setPadding(Insets.EMPTY);
-        hBox.setAlignment(Pos.TOP_RIGHT);
-        globalRoot.getChildren().add(hBox);
+        Text scenetitle = new Text("XYZ coordinates");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Label xLabel = new Label("X:");
+        grid.add(xLabel, 0, 1);
+
+        TextField xText = new TextField();
+        grid.add(xText, 1, 1);
+
+        globalRoot.getChildren().add(grid);
+
     }
 
     private void buildCamera() {

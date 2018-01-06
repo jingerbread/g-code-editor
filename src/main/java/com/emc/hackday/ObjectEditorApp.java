@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -37,7 +38,8 @@ public class ObjectEditorApp extends Application {
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 0.3;
 
-    final Group root = new Group();
+    final Group root3D = new Group();
+    AnchorPane globalRoot = new AnchorPane();
     final Xform axisGroup = new Xform();
     final Xform moleculeGroup = new Xform();
     final Xform world = new Xform();
@@ -69,27 +71,32 @@ public class ObjectEditorApp extends Application {
     public void start(Stage primaryStage) {
         log.info("start()");
 
+        //Add 2D content here
+        Scene scene = new Scene(globalRoot, 1024, 768, true);
+
+        SubScene sub = new
+                SubScene(root3D,1024,768,false, SceneAntialiasing.BALANCED);
+        sub.setCamera(camera);
+        globalRoot.getChildren().add(sub);
+
+        //Add all 3D content to the root3D node
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
         buildXYZPositionEntry();
 
-        root.getChildren().add(world);
-        root.setDepthTest(DepthTest.ENABLE);
+        root3D.getChildren().add(world);
+        root3D.setDepthTest(DepthTest.ENABLE);
 
-        // buildScene();
         buildCamera();
         buildAxes();
         //buildMolecule();
         buildObject();
 
-        Scene scene = new Scene(root, 1024, 768, true);
-        scene.setFill(Color.GREY);
         handleKeyboard(scene, world);
         handleMouse(scene, world);
 
         primaryStage.setTitle("Molecule Sample Application");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        scene.setCamera(camera);
     }
 
     private void buildXYZPositionEntry() {
@@ -109,11 +116,11 @@ public class ObjectEditorApp extends Application {
         HBox hBox = new HBox(0, label, xyzCoordinates);
         hBox.setPadding(Insets.EMPTY);
         hBox.setAlignment(Pos.TOP_RIGHT);
-        cameraXform3.getChildren().add(hBox);
+        globalRoot.getChildren().add(hBox);
     }
 
     private void buildCamera() {
-        root.getChildren().add(cameraXform);
+        root3D.getChildren().add(cameraXform);
         cameraXform.getChildren().add(cameraXform2);
         cameraXform2.getChildren().add(cameraXform3);
         cameraXform3.getChildren().add(camera);
